@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Online Organizer</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="lib/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="lib/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+  <link rel="icon" href="https://image.flaticon.com/icons/svg/470/470326.svg">
+
+  <!--Bootstrap-->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!--Google Fonts-->
+  <link href="https://fonts.googleapis.com/css?family=Cinzel|Comic+Neue|Love+Ya+Like+A+Sister&display=swap" rel="stylesheet">
+
+  <script src="https://uicdn.toast.com/tui.code-snippet/latest/tui-code-snippet.js"></script>
+
+  <script src="https://uicdn.toast.com/tui.dom/v3.0.0/tui-dom.js"></script>
+
+  <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
+
+  <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
+
+  <script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+
+
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.css" />
+
+  <!-- If you use the default popups, use this. -->
+
+
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+
+  <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+
+  <style>
+    body{
+      background-image: url("https://wallpaperaccess.com/full/1536530.jpg");
+    }
+  </style>
+
+</head>
+<body ng-app="myApp" ng-controller="calenderCtrl">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12">
+        <h1 class="text-center text-capitalize h1 my-5">online organizer</h1>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-xl-12">
+        <div class="jumbotron">
+          <h3 class="h3 text-capitalize my-3">next event</h3>
+          <table class="table table-dark table-bordered text-capitalize">
+            <thead>
+            <tr>
+              <th scope="col">Event Name</th>
+              <th scope="col">Start Date and Time</th>
+              <th scope="col">End Date and Time</th>
+              <th scope="col">Number of Days to Next Event</th>
+            </tr>
+            </thead>
+            <tbody ng-repeat="event in events | orderBy:'start'" ng-hide="!$first">
+            <tr>
+              <td>
+                <img src="https://image.flaticon.com/icons/svg/2693/2693507.svg" width="30px" height="30px">
+                {{ event.name }}
+              </td>
+              <td>{{ event.start | date:'dd-MM-yyyy hh:mm' }}</td>
+              <td>{{ event.end  | date:'dd-MM-yyyy hh:mm'}}</td>
+              <td>{{ event.remain }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-xl-6">
+        <div class="card">
+          <div class="card card-body">
+            <h3 class="h3 text-capitalize text-center">Calender</h3>
+            <div id="calendar" style="height: 600px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-6">
+        <div class="card">
+          <div class="card card-body">
+            <h3 class="h3 text-capitalize text-center my-3">add new event</h3>
+            <form novalidate>
+              <label for="eName">Event Name</label>
+              <input
+                      type="text"
+                      class="form-control text-capitalize"
+                      id="eName"
+                      ng-model="eventName"
+                      placeholder="Event Name"
+                      required
+              >
+
+              <label for="start">Start Date and Time</label>
+              <input
+                      type="datetime-local"
+                      class="form-control"
+                      id="start"
+                      ng-model="eventStart"
+                      placeholder="MM-DD-YYYY HH:MM"
+                      required
+              >
+
+              <label for="end">End Date and Time</label>
+              <input
+                      type="datetime-local"
+                      class="form-control"
+                      id="end"
+                      ng-model="eventEnd"
+                      placeholder="MM-DD-YYYY HH:MM"
+                      required
+              >
+
+              <button
+                      class="btn btn-dark btn-block btn-round text-capitalize my-2"
+                      type="submit"
+                      ng-click="addNewEvent()"
+              >
+                {{ edit ? 'Update Event':'Add New Event' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row my-5">
+      <div class="col-xl-12">
+        <div class="card">
+          <div class="card card-body">
+            <h3 class="h3 text-capitalize">upcoming events</h3>
+            <table class="table table-dark table-bordered text-capitalize">
+              <thead>
+              <tr>
+                <th scope="col">Event Name</th>
+                <th scope="col">Start Date and Time</th>
+                <th scope="col">End Date and Time</th>
+                <th scope="col">Action</th>
+              </tr>
+              </thead>
+              <tbody ng-repeat="event in events | orderBy:'start'">
+              <tr>
+                <td>
+                  <img src="https://image.flaticon.com/icons/svg/2693/2693507.svg" width="30px" height="30px">
+                  {{ event.name }}
+                </td>
+                <td>{{ event.start | date:'dd-MM-yyyy hh:mm' }}</td>
+                <td>{{ event.end  | date:'dd-MM-yyyy hh:mm'}}</td>
+                <td>
+                  <button
+                          class="btn btn-primary btn-round my-2 mr-2 ml-2"
+                          ng-click="editEvent($index)"
+                  >
+                    Edit
+                  </button>
+                  <button
+                          class="btn btn-danger btn-round my-2 mr-2 ml-2"
+                          ng-click="deleteEvent($index)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="lib/angular/angular.js"></script>
+  <script src="lib/angular-route/angular-route.js"></script>
+  <script src="app.js"></script>
+  <script src="Controllers/CalenderControl.js"></script>
+  <script src="core/version/version.js"></script>
+  <script src="core/version/version-directive.js"></script>
+  <script src="core/version/interpolate-filter.js"></script>
+</body>
+</html>
